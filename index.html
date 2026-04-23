@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embers of Us — A Farewell</title>
+    <meta name="description" content="A poetic digital farewell for BCA 2026. We were always connected.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Inline SVG filter for paper grain -->
+    <svg style="position:absolute;width:0;height:0">
+        <filter id="paper-noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="5" stitchTiles="stitch" result="noise"/>
+            <feColorMatrix type="saturate" values="0" in="noise" result="grayNoise"/>
+            <feBlend in="SourceGraphic" in2="grayNoise" mode="multiply" result="blended"/>
+            <feComponentTransfer in="blended">
+                <feFuncA type="linear" slope="1"/>
+            </feComponentTransfer>
+        </filter>
+    </svg>
+</head>
+<body>
+    <!-- Gateway Landing Page -->
+    <div id="gateway" class="gateway">
+        <div class="gateway-content">
+            <h1 class="gateway-title">Embers of Us</h1>
+            <p class="gateway-subtitle">Select your cohort to begin the journey</p>
+            <div class="batch-grid">
+                <div class="batch-card" data-batch="BCA">
+                    <span class="batch-code">BCA '26</span>
+                    <div class="batch-glow"></div>
+                </div>
+                <div class="batch-card" data-batch="BCOM">
+                    <span class="batch-code">BCOM '26</span>
+                    <div class="batch-glow"></div>
+                </div>
+                <div class="batch-card" data-batch="BBA">
+                    <span class="batch-code">BBA '26</span>
+                    <div class="batch-glow"></div>
+                </div>
+            </div>
+            <p class="gateway-footer">Final Farewell · Class of 2026</p>
+        </div>
+    </div>
+
+    <canvas id="skyCanvas"></canvas>
+    <div class="moon"></div>
+    <div class="vignette"></div>
+    <div id="loader" class="loader">
+        <div class="loader-glow"></div>
+        <p>Igniting embers...</p>
+    </div>
+
+    <!-- Letter Overlay -->
+    <div id="letterOverlay" class="letter-overlay hidden" aria-hidden="true">
+        <div class="letter-paper" id="letterPaper">
+            <div class="card-tape"></div>
+            <div class="card-content">
+                <div class="card-header">
+                    <h2 class="letter-name" id="letterName"></h2>
+                    <span class="card-batch">BCA '26</span>
+                </div>
+                <div class="card-body">
+                    <p class="letter-message" id="letterMessage"></p>
+                    <p class="letter-about" id="letterAbout"></p>
+                </div>
+            </div>
+            <div class="card-stamp"><span>GRADUATED</span></div>
+            <button class="letter-close" id="letterClose" aria-label="Close">&times;</button>
+        </div>
+    </div>
+
+    <!-- Star name tooltip -->
+    <div id="starTooltip" class="star-tooltip"></div>
+
+    <!-- Ash particles container -->
+    <div id="ashContainer" class="ash-container"></div>
+
+    <!-- Farewell text -->
+    <div class="farewell-text hidden" id="farewellText">
+        <p>We were always connected.</p>
+    </div>
+
+    <!-- UI Controls -->
+    <div class="ui-controls">
+        <button id="audioToggle" class="ui-btn" aria-label="Toggle ambient sound" title="Toggle ambient sound">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+                <path d="M15.54 8.46a5 5 0 010 7.07" class="audio-wave"/>
+                <path d="M19.07 4.93a10 10 0 010 14.14" class="audio-wave"/>
+            </svg>
+        </button>
+        <button id="restartBtn" class="ui-btn" aria-label="Restart experience" title="Restart experience" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+            Restart
+        </button>
+        <button id="farewellBtn" class="ui-btn farewell-trigger" aria-label="Begin farewell" title="Begin farewell">
+            ✦ Farewell
+        </button>
+    </div>
+
+    <!-- Title -->
+    <div class="title-overlay" id="titleOverlay">
+        <h1>Embers of Us</h1>
+        <p class="title-sub">click a star to read a letter</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/sky.js"></script>
+    <script src="js/letter.js"></script>
+    <script src="js/constellation.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
