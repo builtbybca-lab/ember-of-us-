@@ -274,6 +274,11 @@ window.Sky = (function () {
             if (!farewellMode) {
                 dx = Math.sin(time * star.driftSpeed + star.driftPhase) * star.driftRadius;
                 dy = Math.cos(time * star.driftSpeed * 0.7 + star.driftPhase + 1) * star.driftRadius;
+            } else if (star.shattering) {
+                star.x += star.vx || 0;
+                star.y += star.vy || 0;
+                star.vy += 0.001; // subtle gravity
+                bright *= 0.8;
             } else {
                 bright = Math.min(1, star.brightness * 1.5);
             }
@@ -282,6 +287,19 @@ window.Sky = (function () {
             const sy = star.y + dy;
             star._rx = sx;
             star._ry = sy;
+
+            // Polaroid Mode
+            if (star.polaroidMode && !star.shattering) {
+                ctx.save();
+                ctx.translate(sx, sy);
+                ctx.rotate(star.polaroidRot || 0);
+                const pw = 40, ph = 50;
+                ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                ctx.fillRect(-pw/2, -ph/2, pw, ph);
+                ctx.fillStyle = 'rgba(200,190,170,0.4)';
+                ctx.fillRect(-pw/2 + 3, -ph/2 + 3, pw - 6, ph - 15);
+                ctx.restore();
+            }
 
             // Interaction
             const dist = Math.hypot(worldMouse.x - sx, worldMouse.y - sy);
@@ -395,6 +413,27 @@ window.Sky = (function () {
         const x1 = (Math.random() - 0.5) * W * 2 + W/2;
         const y1 = (Math.random() - 0.5) * H * 2 + H/2;
         shootingStars.push({ x1, y1, x2: x1 + Math.cos(angle) * len, y2: y1 + Math.sin(angle) * len, progress: 0, duration: 1200 + Math.random() * 1200 });
+    }
+
+    function burstShootingStars(count) {
+        for (let i = 0; i < count; i++) {
+            setTimeout(spawnShootingStar, i * 50);
+        }
+    }
+
+    function shatterStars() {
+        stars.forEach(s => {
+            s.shattering = true;
+            s.vx = (Math.random() - 0.5) * 0.8;
+            s.vy = 0.3 + Math.random() * 0.6;
+        });
+    }
+
+    function togglePolaroids(on) {
+        stars.forEach(s => {
+            s.polaroidMode = on;
+            s.polaroidRot = (Math.random() - 0.5) * 0.3;
+        });
     }
 
     function drawTreeline() {
@@ -538,5 +577,5 @@ window.Sky = (function () {
     function setGlobalDim(v) { globalDim = Math.max(0, Math.min(1, v)); }
     function getStars() { return stars; }
 
-    return { init, setFarewellMode, setGlobalDim, getStars, focusOnStar, resetFocus };
+    return { init, setFarewellMode, setGlobalDim, getStars, focusOnStar, resetFocus, burstShootingStars, shatterStars, togglePolaroids };
 })();

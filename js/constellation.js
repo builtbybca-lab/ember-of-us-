@@ -226,18 +226,33 @@ window.Constellation = (function () {
 
             case 'text':
                 drawLines(ctx, stars, 1);
-                if (phaseTime > 4500) { phase = 'fade'; phaseTime = 0; }
+                if (phaseTime > 5000) { phase = 'memories'; phaseTime = 0; window.Sky.togglePolaroids(true); }
+                break;
+
+            case 'memories':
+                drawLines(ctx, stars, 1);
+                if (phaseTime > 6000) { 
+                    phase = 'shatter'; 
+                    phaseTime = 0; 
+                    window.Sky.togglePolaroids(false);
+                    window.Sky.shatterStars();
+                    _showFinalMessage();
+                    _hideText();
+                }
+                break;
+
+            case 'shatter':
+                // lines fade away
+                drawLines(ctx, stars, Math.max(0, 1 - phaseTime / 2000));
+                if (phaseTime > 3000) { phase = 'fade'; phaseTime = 0; }
                 break;
 
             case 'fade':
-                drawLines(ctx, stars, 1);
                 window.Sky.setGlobalDim(Math.max(0.04, 1 - phaseTime / 6000));
-                if (phaseTime > 3500) _hideText();
                 if (phaseTime > 6500) phase = 'done';
                 break;
 
             case 'done':
-                drawLines(ctx, stars, 1);
                 break;
         }
     }
@@ -250,6 +265,21 @@ window.Constellation = (function () {
     function _hideText() {
         const el = document.getElementById('farewellText');
         el.classList.remove('visible');
+    }
+
+    function _showFinalMessage() {
+        const el = document.getElementById('finalMessage');
+        el.classList.remove('hidden');
+        setTimeout(() => el.classList.add('visible'), 100);
+        
+        // Show ignite button after a delay
+        setTimeout(() => {
+            const btn = document.getElementById('igniteBtn');
+            btn.classList.remove('hidden');
+            btn.style.opacity = '0';
+            btn.style.transition = 'opacity 2s ease';
+            setTimeout(() => btn.style.opacity = '1', 50);
+        }, 5000);
     }
 
     function startFarewell() {

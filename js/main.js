@@ -39,6 +39,14 @@
 
         // Search Logic
         initSearch();
+
+        // Ignite Spark
+        const igniteBtn = document.getElementById('igniteBtn');
+        igniteBtn.addEventListener('click', () => {
+            if (window.Sky) {
+                window.Sky.burstShootingStars(35);
+            }
+        });
     }
 
     async function playIntro() {
