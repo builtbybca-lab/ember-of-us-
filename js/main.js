@@ -6,7 +6,7 @@
 (function () {
     'use strict';
 
-    const INTRO_TEXT = "Three years. Thousands of lines of code. One sky. We were always connected.";
+    const INTRO_TEXT = "Three years. Thousands of memories. One sky. We were always connected.";
 
     async function init() {
         // Start with Intro
