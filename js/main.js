@@ -1,11 +1,17 @@
 /* ============================================
-   EMBERS OF US — Main Orchestrator v3
+   EMBERS OF US — Main Orchestrator v3.1
+   Intro sequence & Search Logic
    ============================================ */
 
 (function () {
     'use strict';
 
+    const INTRO_TEXT = "Three years. Thousands of lines of code. One sky. We were always connected.";
+
     async function init() {
+        // Start with Intro
+        await playIntro();
+
         // Wire up Gateway Batch Selection
         const gateway = document.getElementById('gateway');
         const batchCards = document.querySelectorAll('.batch-card');
@@ -25,13 +31,80 @@
             audioBtn.classList.toggle('audio-active', on);
         });
 
-        // Restart trigger (now reloads to Gateway)
+        // Restart trigger
         const restartBtn = document.getElementById('restartBtn');
         restartBtn.addEventListener('click', () => {
             location.reload();
         });
 
-        // Title logic moved to startExperience
+        // Search Logic
+        initSearch();
+    }
+
+    async function playIntro() {
+        const introOverlay = document.getElementById('introOverlay');
+        const introTextEl = document.getElementById('introText');
+        
+        // Short delay before starting
+        await new Promise(r => setTimeout(r, 1000));
+
+        // Typewriter
+        for (let i = 0; i <= INTRO_TEXT.length; i++) {
+            introTextEl.textContent = INTRO_TEXT.slice(0, i);
+            await new Promise(r => setTimeout(r, 45 + Math.random() * 40));
+        }
+
+        // Wait then fade
+        await new Promise(r => setTimeout(r, 2000));
+        introOverlay.classList.add('hidden');
+        
+        // Gateway appears via CSS animation
+        document.getElementById('gateway').classList.remove('hidden');
+    }
+
+    function initSearch() {
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        
+        if (!searchInput) return;
+
+        searchInput.addEventListener('input', () => {
+            const val = searchInput.value.trim().toLowerCase();
+            if (!val || !window.STUDENTS) {
+                searchResults.classList.add('hidden');
+                return;
+            }
+
+            const matches = window.STUDENTS.filter(s => s.name.toLowerCase().includes(val)).slice(0, 5);
+            
+            if (matches.length > 0) {
+                searchResults.innerHTML = matches.map(s => `<div class="search-item" data-name="${s.name}">${s.name}</div>`).join('');
+                searchResults.classList.remove('hidden');
+                
+                // Add click events to items
+                searchResults.querySelectorAll('.search-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const name = item.getAttribute('data-name');
+                        const student = window.STUDENTS.find(s => s.name === name);
+                        if (student && window.Sky) {
+                            window.Sky.focusOnStar(name);
+                            window.Letter.open(student);
+                        }
+                        searchInput.value = '';
+                        searchResults.classList.add('hidden');
+                    });
+                });
+            } else {
+                searchResults.classList.add('hidden');
+            }
+        });
+
+        // Close search on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                searchResults.classList.add('hidden');
+            }
+        });
     }
 
     async function startExperience(batch) {

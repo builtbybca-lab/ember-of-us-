@@ -3,6 +3,22 @@
    A poetic digital farewell
    ============================================ */
 
+:root {
+    /* Night Theme (Deep Nebula) */
+    --sky-top: #020310;
+    --sky-mid: #04061a;
+    --sky-bot: #070612;
+    --aurora-1: 75, 210, 165;
+    --aurora-2: 125, 85, 195;
+    
+    /* Golden Hour Theme (Sunset) */
+    --gh-top: #1a0b2e;
+    --gh-mid: #3d154d;
+    --gh-bot: #5e2a3c;
+    --gh-aurora-1: 255, 140, 60;
+    --gh-aurora-2: 255, 80, 120;
+}
+
 /* --- Reset & Base --- */
 *, *::before, *::after {
     margin: 0;
@@ -636,8 +652,132 @@ body.sky-hover {
     50% { transform: scale(2.5); opacity: 1; }
 }
 
+/* --- Cinematic Intro --- */
+.intro-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 2s ease, visibility 2s ease;
+}
+
+.intro-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.intro-content {
+    max-width: 600px;
+    width: 85%;
+    text-align: center;
+}
+
+.intro-typewriter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    line-height: 1.6;
+    color: rgba(255, 248, 231, 0.8);
+    min-height: 2.4em;
+    letter-spacing: 0.05em;
+}
+
+/* --- Search UI --- */
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 248, 231, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-bar:focus-within {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 248, 231, 0.3);
+    box-shadow: 0 0 30px rgba(255, 200, 100, 0.1);
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    color: #e8dcc8;
+    padding: 8px 0 8px 14px;
+    width: 0;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    outline: none;
+    opacity: 0;
+}
+
+.search-container:hover .search-input,
+.search-input:focus {
+    width: 220px;
+    opacity: 1;
+}
+
+.search-results {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    width: 260px;
+    max-height: 280px;
+    background: rgba(12, 12, 18, 0.92);
+    border: 1px solid rgba(255, 248, 231, 0.15);
+    backdrop-filter: blur(20px);
+    margin-bottom: 12px;
+    border-radius: 4px;
+    overflow-y: auto;
+    z-index: 30;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.search-results.hidden {
+    display: none;
+}
+
+.search-item {
+    padding: 14px 18px;
+    color: rgba(255, 248, 231, 0.65);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: right;
+}
+
+.search-item:last-child {
+    border-bottom: none;
+}
+
+.search-item:hover {
+    background: rgba(255, 200, 100, 0.1);
+    color: #fff;
+    padding-right: 24px;
+}
+
 /* --- Responsive --- */
 @media (max-width: 600px) {
+    .intro-typewriter {
+        font-size: 1.4rem;
+    }
+    .search-container:hover .search-input,
+    .search-input:focus {
+        width: 160px;
+    }
     .title-overlay h1 {
         font-size: 1.6rem;
     }
